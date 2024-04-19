@@ -1,20 +1,25 @@
-const express = require("express");
-const { ApolloServer } = require("apollo-server-express");
-const mongoose = require("mongoose");
+import express from "express";
+import { ApolloServer } from "apollo-server-express";
+import mongoose from "mongoose";
 
 const app = express();
 
-const PORT = process.env.PORT || 4000;
+const PORT: number = parseInt(process.env.PORT as string, 10) || 4000;
 
-mongoose
-  .connect("mongodb://localhost:27017/taskify", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => {
+const startServer = async () => {
+  try {
+    await mongoose.connect("mongodb://localhost:27017/taskify", {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
     console.log("MongoDB connected!");
+
     app.listen(PORT, () => {
       console.log(`Server started on ${PORT}...`);
     });
-  })
-  .catch((err) => console.log(err));
+  } catch (error) {
+    console.error("Error starting server:", error);
+  }
+};
+
+startServer();

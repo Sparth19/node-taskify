@@ -1,25 +1,44 @@
-import express from "express";
+import express, { Application } from "express";
 import { ApolloServer } from "apollo-server-express";
 import mongoose from "mongoose";
+import { typeDefs } from "./graphql/schema";
+import { resolvers } from "./graphql/resolvers";
 
-const app = express();
+const app: Application = express();
 
 const PORT: number = parseInt(process.env.PORT as string, 10) || 4000;
 
+mongoose
+  .connect("mongodb://localhost:27017/taskify", {})
+  .then(() => {
+    console.log("MongoDB connected!");
+  })
+  .catch((error) => {
+    console.error("MongoDB connection error:", error);
+  });
+
+let apolloServer: ApolloServer | null = null;
+
 const startServer = async () => {
   try {
-    await mongoose.connect("mongodb://localhost:27017/taskify", {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
+    apolloServer = new ApolloServer({
+      typeDefs,
+      resolvers,
     });
-    console.log("MongoDB connected!");
-
-    app.listen(PORT, () => {
-      console.log(`Server started on ${PORT}...`);
-    });
+    await apolloServer.start();
+    apolloServer.applyMiddleware({ app });
   } catch (error) {
     console.error("Error starting server:", error);
   }
 };
 
 startServer();
+
+app.listen(PORT, () => {
+  console.log(`Server started on ${PORT}...`);
+  if (apolloServer) {
+    console.log(`GraphQL server ready at ${apolloServer.graphqlPath}`);
+  } else {
+    console.error("Apollo Server not initialized.");
+  }
+});

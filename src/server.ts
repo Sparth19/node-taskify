@@ -3,13 +3,16 @@ import { ApolloServer } from "apollo-server-express";
 import mongoose from "mongoose";
 import { typeDefs } from "./graphql/schema";
 import { resolvers } from "./graphql/resolvers";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app: Application = express();
 
 const PORT: number = parseInt(process.env.PORT as string, 10) || 4000;
 
 mongoose
-  .connect("mongodb://localhost:27017/taskify", {})
+  .connect(process.env.MONGO_CONNECTION_STRING as string, {})
   .then(() => {
     console.log("MongoDB connected!");
   })

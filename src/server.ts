@@ -37,8 +37,8 @@ const startServer = async () => {
 
 startServer();
 
-app.get("/api", (req, res) => {
-  return res.status(200).send("Welcome to Taskify BE");
+app.get("/", (req, res) => {
+  return res.status(200).send("Welcome to Taskify.");
 });
 
 app.listen(PORT, () => {

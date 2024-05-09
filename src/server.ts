@@ -13,8 +13,8 @@ const PORT: number = parseInt(process.env.PORT as string, 10) || 4000;
 
 mongoose
   .connect(process.env.MONGO_CONNECTION_STRING as string, {})
-  .then(() => {
-    console.log("MongoDB connected!");
+  .then(({ connection }) => {
+    console.log("MongoDB connected!", connection.host);
   })
   .catch((error) => {
     console.error("MongoDB connection error:", error);
@@ -36,6 +36,10 @@ const startServer = async () => {
 };
 
 startServer();
+
+app.get("/", (req, res) => {
+  return res.status(200).send("Welcome to Taskify BE");
+});
 
 app.listen(PORT, () => {
   console.log(`Server started on ${PORT}...`);

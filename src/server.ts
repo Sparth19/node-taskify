@@ -37,7 +37,7 @@ const startServer = async () => {
 
 startServer();
 
-app.get("/", (req, res) => {
+app.get("/api", (req, res) => {
   return res.status(200).send("Welcome to Taskify BE");
 });
 

@@ -9,7 +9,7 @@ dotenv.config();
 
 const app: Application = express();
 
-const PORT: number = parseInt(process.env.PORT as string, 10) || 4000;
+const PORT: number = parseInt(process.env.PORT as string, 10);
 
 mongoose
   .connect(process.env.MONGO_CONNECTION_STRING as string, {})
